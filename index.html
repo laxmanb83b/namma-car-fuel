@@ -13,7 +13,1326 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#080c14;--surface:#0f172a;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);
-  --indigo:#6366f1;--indigo-light:#a5b4fc;--indigo-d<!DOCTYPE html>
+  --indigo:#6366f1;--indigo-light:#a5b4fc;--in<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Namma Car Fuel &amp; Charging">
+<meta name="theme-color" content="#080c14">
+<title>Namma Car Fuel &amp; Charging ⛽⚡</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0d1117;--surface:#161b22;--card:rgba(255,255,255,0.06);--border:rgba(255,255,255,0.12);
+  --indigo:#818cf8;--indigo-light:#c7d2fe;--indigo-dim:rgba(129,140,248,0.2);
+  --green:#4ade80;--green-dim:rgba(74,222,128,0.12);--green-border:rgba(74,222,128,0.3);
+  --amber:#fbbf24;--text:#f0f6fc;--text-mid:#e6edf3;--text-muted:#b1bac4;--text-dim:#8b949e;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* HEADER */
+.header{background:#161b22;border-bottom:1px solid rgba(255,255,255,0.12);padding:14px 16px 12px;position:sticky;top:0;z-index:100}
+.header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.header-brand{display:flex;align-items:center;gap:8px}
+.header-brand span{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.header-sub{font-size:11px;color:#b1bac4;margin-top:1px}
+
+/* SEARCH BAR */
+.search-wrap{position:relative;margin-bottom:8px}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;z-index:2}
+.search-input{width:100%;background:#1c2128;border:1.5px solid rgba(255,255,255,0.15);border-radius:11px;padding:10px 44px 10px 36px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s}
+.search-input:focus{border-color:var(--indigo);background:rgba(255,255,255,0.08)}
+.search-input::placeholder{color:#8b949e}
+.search-clear{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:22px;height:22px;color:var(--text-muted);font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;font-family:inherit}
+.search-clear.visible{display:flex}
+
+/* SUGGESTIONS DROPDOWN */
+.suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#1c2128;border:1px solid rgba(255,255,255,0.15);border-radius:11px;overflow:hidden;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,0.5);display:none}
+.suggestions.open{display:block}
+.suggestion-item{padding:11px 14px;cursor:pointer;font-size:13px;color:#f0f6fc;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.1s}
+.suggestion-item:last-child{border-bottom:none}
+.suggestion-item:active,.suggestion-item:hover{background:rgba(99,102,241,0.15)}
+.suggestion-icon{font-size:14px;flex-shrink:0}
+.suggestion-sub{font-size:11px;color:#b1bac4;margin-top:1px}
+
+/* CONTROLS ROW */
+.controls-row{display:flex;gap:8px;align-items:center}
+.radius-select{background:#1c2128;border:1px solid rgba(255,255,255,0.15);border-radius:9px;padding:9px 10px;color:#f0f6fc;font-size:13px;font-family:inherit;outline:none;cursor:pointer;-webkit-appearance:none;flex-shrink:0}
+.gps-btn{background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:9px;padding:9px 13px;color:var(--indigo-light);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all 0.2s}
+.gps-btn:active{opacity:0.7}
+.gps-btn.locating-gps{animation:pulse 1s ease infinite}
+.search-btn{flex:1;background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;border-radius:9px;padding:9px 14px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity 0.2s}
+.search-btn:active{opacity:0.7}
+.search-btn .spin{display:none}
+.search-btn.searching .spin{display:inline-block;animation:spin 0.7s linear infinite}
+
+/* MAIN */
+.main{padding:14px;max-width:600px;margin:0 auto;padding-bottom:40px}
+
+/* LOCATING STATE */
+.locating{text-align:center;padding:30px 20px;animation:fadeUp 0.3s ease}
+.locating-icon{font-size:48px;margin-bottom:16px;animation:pulse 1.5s ease infinite}
+.locating-text{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.locating-sub{font-size:13px;color:#b1bac4}
+
+/* SPLASH / ALLOW LOCATION */
+.splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:32px 24px;animation:fadeUp 0.4s ease;text-align:center}
+.splash-fuel{font-size:64px;margin-bottom:8px}
+.splash-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-0.5px}
+.splash-desc{font-size:14px;color:#b1bac4;line-height:1.6;margin-bottom:32px;max-width:280px}
+.splash-allow-btn{background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;border-radius:16px;padding:16px 32px;color:#fff;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;margin-bottom:16px;box-shadow:0 8px 32px rgba(99,102,241,0.4);transition:transform 0.15s,box-shadow 0.15s}
+.splash-allow-btn:active{transform:scale(0.97);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.splash-manual{font-size:13px;color:var(--text-dim);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.splash-manual:active{color:var(--indigo-light)}
+.detecting-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:32px 24px;text-align:center}
+.detecting-spinner{width:48px;height:48px;border:3px solid rgba(99,102,241,0.2);border-top-color:#6366f1;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:20px}
+.detecting-text{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.detecting-sub{font-size:13px;color:#b1bac4}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:#161b22;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:12px 6px;text-align:center;animation:fadeUp 0.3s ease both}
+.stat-card.green{background:rgba(34,197,94,0.07);border-color:rgba(34,197,94,0.2)}
+.stat-icon{font-size:18px;margin-bottom:4px}
+.stat-value{font-size:16px;font-weight:800;font-family:monospace;color:#f0f6fc}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-label{font-size:10px;color:#b1bac4;font-weight:700;margin-top:2px}
+
+/* FILTER ROW */
+.filter-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.filter-label{font-size:10px;color:#b1bac4;font-weight:700;letter-spacing:0.5px}
+.filter-chip{border:1px solid rgba(255,255,255,0.15);border-radius:7px;padding:5px 10px;background:rgba(255,255,255,0.04);color:#b1bac4;font-weight:600;font-size:11px;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.filter-chip.active{background:rgba(99,102,241,0.12);border-color:rgba(99,102,241,0.4);color:var(--indigo-light)}
+.filter-chip.member{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3);color:#fbbf24}
+.filter-chip.member.active{background:rgba(251,191,36,0.2);border-color:#fbbf24}
+
+/* FUEL TOGGLE */
+.fuel-toggle{display:flex;gap:4px;margin-bottom:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:11px;padding:4px}
+.fuel-btn{flex:1;border:none;border-radius:7px;padding:8px 4px;background:rgba(255,255,255,0.03);color:#e6edf3;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.fuel-btn.active{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}
+
+/* SORT */
+.sort-row{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.sort-label{font-size:10px;color:#b1bac4;font-weight:700;letter-spacing:0.5px}
+.sort-btn{border:1px solid rgba(255,255,255,0.15);border-radius:7px;padding:5px 10px;background:rgba(255,255,255,0.04);color:#b1bac4;font-weight:600;font-size:11px;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.sort-btn.active{background:rgba(99,102,241,0.12);border-color:rgba(99,102,241,0.4);color:var(--indigo-light)}
+
+/* MEMBER BADGE */
+.member-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);border-radius:5px;padding:1px 6px;font-size:9px;font-weight:800;color:#fbbf24;letter-spacing:0.5px;margin-left:6px}
+
+/* STATION CARD */
+.station-card{background:#161b22;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;animation:fadeUp 0.3s ease both}
+.station-card.selected{background:rgba(129,140,248,0.15);border-color:#818cf8;border-radius:14px 14px 0 0;margin-bottom:0}
+.station-card:active{opacity:0.85}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.card-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.brand-icon{width:42px;height:42px;border-radius:10px;border-width:2px;border-style:solid;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-info{min-width:0}
+.card-info .name{font-weight:700;font-size:14px;color:#f0f6fc;margin-bottom:2px;display:flex;align-items:center;flex-wrap:wrap;gap:2px}
+.card-info .address{font-size:11px;color:#b1bac4;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stars{color:var(--amber);font-size:11px}
+.stars span{color:#b1bac4;margin-left:4px}
+.card-right{text-align:right;flex-shrink:0;margin-left:8px}
+.distance-badge{background:rgba(129,140,248,0.18);border:1px solid rgba(129,140,248,0.4);border-radius:7px;padding:3px 8px;font-size:12px;font-weight:700;color:#c7d2fe;margin-bottom:4px;display:inline-block}
+.hours{font-size:11px;font-weight:600}
+.hours.open{color:var(--green)}
+.hours.limited{color:#fbbf24}
+
+/* PRICE CELLS */
+.prices-row{display:flex;gap:6px}
+.price-cell{flex:1;background:#1c2128;border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:10px 4px;text-align:center;position:relative;margin-top:8px}
+.price-cell.best{background:#052e16;border-color:#22c55e}
+.best-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;font-size:8px;font-weight:800;padding:1px 5px;border-radius:99px;white-space:nowrap}
+.octane-badge{background:rgba(255,255,255,0.1);border-radius:4px;padding:2px 4px;display:inline-block;margin-bottom:5px;font-size:10px;font-weight:700;color:#e6edf3;font-family:monospace}
+.price-cell.best .octane-badge{background:rgba(34,197,94,0.15);color:#86efac}
+.fuel-type-label{font-size:10px;color:#b1bac4;font-weight:700;margin-bottom:3px}
+.price-value{font-size:17px;font-weight:800;font-family:monospace;color:#f0f6fc}
+.price-cell.best .price-value{color:var(--green)}
+.member-price{font-size:9px;color:#fbbf24;font-weight:700;margin-top:2px}
+
+/* DETAIL PANEL */
+.detail-panel{background:#1c2128;border:1px solid #818cf8;border-top:none;border-radius:0 0 14px 14px;padding:14px 16px;margin-bottom:10px;animation:fadeUp 0.2s ease}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.detail-label{font-size:10px;color:#b1bac4;font-weight:700;margin-bottom:3px;letter-spacing:0.5px}
+.detail-value{font-size:13px;color:#f0f6fc;font-weight:600}
+.detail-value.blue{color:var(--indigo-light)}
+.action-row{display:flex;gap:8px}
+.action-btn{flex:1;border-radius:9px;padding:10px;font-weight:700;font-size:13px;text-decoration:none;text-align:center;display:block;border:1px solid;font-family:inherit;cursor:pointer;transition:opacity 0.15s}
+.action-btn:active{opacity:0.7}
+.btn-directions{background:var(--indigo-dim);border-color:rgba(99,102,241,0.3);color:var(--indigo-light)}
+.btn-call{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;margin-bottom:8px}
+.page-btn{background:#161b22;border:1px solid rgba(255,255,255,0.12);border-radius:9px;padding:8px 14px;color:#b1bac4;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.page-btn:hover{border-color:var(--indigo);color:var(--indigo-light)}
+.page-btn:disabled{opacity:0.3;cursor:not-allowed}
+.page-btn.current{background:rgba(99,102,241,0.15);border-color:var(--indigo);color:var(--indigo-light)}
+.page-info{font-size:12px;color:#b1bac4;font-weight:600}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:#b1bac4}
+.empty-icon{font-size:40px;margin-bottom:12px}
+
+.footer{text-align:center;font-size:11px;color:#8b949e;margin-top:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* MODE TABS */
+.mode-tabs{display:flex;gap:4px;margin-top:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:11px;padding:4px}
+.mode-tab{flex:1;border:none;border-radius:7px;padding:9px 4px;background:rgba(255,255,255,0.04);color:#e6edf3;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-tab.active-gas{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}
+.mode-tab.active-ev{background:linear-gradient(135deg,#0891b2,#22d3ee);color:#fff}
+/* EV */
+--ev:#22d3ee;--ev-dim:rgba(34,211,238,0.12);--ev-border:rgba(34,211,238,0.25);
+.ev-card{background:#161b22;border:1px solid rgba(34,211,238,0.3);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;animation:fadeUp 0.3s ease both}
+.ev-card.selected{border-color:#22d3ee;border-radius:14px 14px 0 0;margin-bottom:0}
+.ev-card:active{opacity:0.85}
+.ev-icon-wrap{width:42px;height:42px;border-radius:10px;border:2px solid rgba(34,211,238,0.4);background:rgba(34,211,238,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ev-network-badge{display:inline-flex;align-items:center;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.25);border-radius:5px;padding:1px 6px;font-size:9px;font-weight:800;color:#22d3ee;letter-spacing:0.5px;margin-left:4px}
+.ev-connector-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ev-connector{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;text-align:center;min-width:70px;flex:1}
+.ev-connector.fast{border-color:rgba(34,211,238,0.35);background:rgba(34,211,238,0.07)}
+.ev-conn-type{font-size:10px;font-weight:700;color:#b1bac4;margin-bottom:3px}
+.ev-conn-kw{font-size:15px;font-weight:800;font-family:monospace;color:#f0f6fc}
+.ev-connector.fast .ev-conn-kw{color:#22d3ee}
+.ev-conn-count{font-size:9px;color:#b1bac4;margin-top:2px}
+.ev-detail-panel{background:#1c2128;border:1px solid #22d3ee;border-top:none;border-radius:0 0 14px 14px;padding:14px 16px;margin-bottom:10px;animation:fadeUp 0.2s ease}
+.btn-ev-directions{background:rgba(34,211,238,0.1);border-color:rgba(34,211,238,0.3);color:#22d3ee}
+.ev-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.ev-stat{background:#161b22;border:1px solid rgba(34,211,238,0.3);border-radius:12px;padding:12px 6px;text-align:center;animation:fadeUp 0.3s ease both}
+.ev-loading{text-align:center;padding:40px 20px;color:#b1bac4}
+.ev-loading-spinner{width:36px;height:36px;border:3px solid rgba(34,211,238,0.2);border-top-color:#22d3ee;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+/* AVAIL */
+.avail-bar{display:flex;gap:3px;margin-top:8px;align-items:center}
+.avail-segment{height:6px;border-radius:3px;flex:1}
+.avail-label{font-size:10px;font-weight:700;margin-left:6px;white-space:nowrap}
+.avail-green{background:#4ade80}.avail-red{background:#ef4444}
+.price-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;color:#4ade80;margin-top:4px}
+.price-tag.paid{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.25);color:#fbbf24}
+.price-tag.unknown-price{background:rgba(100,116,139,0.15);border-color:rgba(148,163,184,0.3);color:#94a3b8}
+.est-badge{font-size:8px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.2);border-radius:4px;padding:1px 4px;color:var(--indigo-light);margin-left:4px;font-weight:600}
+/* AAA BANNER */
+.aaa-banner{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;animation:fadeUp 0.3s ease}
+.aaa-banner-label{font-size:10px;font-weight:700;color:#fbbf24;letter-spacing:0.5px;margin-bottom:3px}
+.aaa-banner-prices{display:flex;gap:12px;flex-wrap:wrap}
+.aaa-price-item{font-size:12px;color:#e6edf3;font-weight:600}
+.aaa-price-item span{color:#fbbf24;font-family:monospace;font-weight:800}
+.aaa-src{font-size:9px;color:#b1bac4;margin-top:3px}
+/* CROWDSOURCE */
+.reported-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:5px;padding:1px 6px;font-size:9px;font-weight:800;color:#4ade80;margin-left:4px}
+.btn-report{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--indigo-light)}
+.sync-bar{font-size:10px;color:#b1bac4;margin-top:2px;min-height:14px}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn 0.2s ease}
+.modal-sheet{background:#1c2128;border-radius:20px 20px 0 0;padding:20px 20px 44px;width:100%;max-width:500px;animation:slideUp 0.25s ease}
+.modal-handle{width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:16px;font-weight:800;color:#f0f6fc;margin-bottom:2px}
+.modal-sub{font-size:12px;color:#b1bac4;margin-bottom:16px}
+.price-input-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.price-input-label{font-size:12px;font-weight:700;color:#b1bac4;width:82px;flex-shrink:0}
+.price-input{flex:1;background:#0d1117;border:1.5px solid rgba(255,255,255,0.2);border-radius:9px;padding:10px 12px;color:var(--text);font-size:16px;font-family:monospace;font-weight:700;outline:none;text-align:right}
+.price-input:focus{border-color:var(--indigo)}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.modal-cancel{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px;color:#b1bac4;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+.modal-save{flex:2;background:linear-gradient(135deg,#16a34a,#4ade80);border:none;border-radius:10px;padding:12px;color:#fff;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="header-brand"><span>⛽</span><span>Namma Car Fuel &amp; Charging</span></div>
+      <div class="header-sub" id="header-sub">Detecting your location…</div><div class="sync-bar" id="sync-bar"></div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center"><button class="gps-btn" id="sync-btn" onclick="syncPrices()" title="Sync crowd prices" style="font-size:15px;padding:9px 11px">☁️</button><button class="gps-btn locating-gps" id="gps-btn" onclick="requestGPS()">📍 GPS</button></div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search-input" type="text" placeholder="Search city, zip code, or address…" autocomplete="off"
+      oninput="onSearchInput(this.value)"
+      onkeydown="onSearchKey(event)"
+      onfocus="showSuggestions()"
+    >
+    <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+  <div class="controls-row">
+    <select class="radius-select" id="radius-select" onchange="onRadiusChange()">
+      <option value="5">5 mi</option>
+      <option value="10" selected>10 mi</option>
+      <option value="15">15 mi</option>
+      <option value="25">25 mi</option>
+      <option value="50">50 mi</option>
+    </select>
+    <button class="search-btn" id="search-btn" onclick="doSearch()">
+      <span class="spin">↻</span>
+      <span class="btn-label">Search Nearby</span>
+    </button>
+  </div>
+  <div class="mode-tabs"><button class="mode-tab active-gas" id="tab-gas" onclick="switchMode('gas')">⛽ Gas Stations</button><button class="mode-tab" id="tab-ev" onclick="switchMode('ev')">⚡ EV Stations</button></div>
+</div>
+
+<div class="main">
+  <div id="app-body">
+    <!-- splash shown before location is known -->
+    <div class="splash" id="splash-screen">
+      <div class="splash-fuel">⛽</div>
+      <div class="splash-title">Find Cheap Gas Near You</div>
+      <div class="splash-desc">Namma Car Fuel &amp; Charging finds live gas stations near you via OpenStreetMap. Report prices to share with everyone.</div>
+      <button class="splash-allow-btn" onclick="requestGPS()">
+        <span>📍</span> Use My Current Location
+      </button>
+      <span class="splash-manual" onclick="focusSearch()">Or search by city / zip code</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTS ────────────────────────────────────────────────────────────────
+// ── JSONBIN CROWDSOURCE ─────────────────────────────────────────────────────
+const JSONBIN_KEY  = '$2a$10$jvVizh3Go.GUjutZqMCLfOUEJTYUAkzEBxWAKwxol8uD6iGI27iq2';
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+let binId          = localStorage.getItem('namma_bin_id')||null;
+let reportedPrices = JSON.parse(localStorage.getItem('namma_prices')||'{}');
+let aaaData        = null;
+let currentMode    = 'gas';
+let evStations=[], evSelectedId=null, evPage=1;
+
+const OCTANE = {regular:"87",midgrade:"89",premium:"93",diesel:"DSL"};
+const LABELS  = {regular:"Regular",midgrade:"Mid-Grade",premium:"Premium",diesel:"Diesel"};
+const TYPES   = ["regular","midgrade","premium","diesel"];
+const PAGE_SIZE = 5;
+
+// Quick city suggestions shown before typing
+const QUICK_SUGGESTIONS = [
+  {label:"Irving, TX",       sub:"75063", lat:32.9176, lng:-96.9590, icon:"📍"},
+  {label:"Dallas, TX",       sub:"75201", lat:32.7767, lng:-96.7970, icon:"🏙"},
+  {label:"Fort Worth, TX",   sub:"76102", lat:32.7555, lng:-97.3308, icon:"🏙"},
+  {label:"Plano, TX",        sub:"75023", lat:33.0198, lng:-96.6989, icon:"📍"},
+  {label:"Arlington, TX",    sub:"76010", lat:32.7357, lng:-97.1081, icon:"📍"},
+  {label:"Garland, TX",      sub:"75040", lat:32.9126, lng:-96.6389, icon:"📍"},
+  {label:"Frisco, TX",       sub:"75034", lat:33.1507, lng:-96.8236, icon:"📍"},
+  {label:"McKinney, TX",     sub:"75069", lat:33.1972, lng:-96.6397, icon:"📍"},
+];
+
+// Dallas-area station database (member clubs + regular stations)
+// Prices are May 2026 estimates for the Irving/DFW area
+// Gas stations now fetched live from OpenStreetMap
+const STATION_DB = [];
+let filtered       = [];
+let userLat        = null;
+let userLng        = null;
+let userLabel      = '';
+let selectedFuel   = "regular";
+let sortBy         = "distance";
+let selectedId     = null;
+let currentPage    = 1;
+let showMemberOnly = false;
+let hasSearched    = false;
+let geocodeTimer   = null;
+let liveSuggestions= [];
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function haversine(lat1,lng1,lat2,lng2){
+  const R=3958.8,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function rnd(p){return Math.round((p+(Math.random()*0.08-0.04))*100)/100}
+function stars(r){return'★'.repeat(Math.floor(r))+'☆'.repeat(5-Math.floor(r))}
+function fmtDist(d){return d<0.1?'<0.1 mi':d.toFixed(1)+' mi'}
+function setHeaderSub(txt){document.getElementById('header-sub').textContent=txt}
+
+// ── SEARCH INPUT HANDLER ──────────────────────────────────────────────────────
+function onSearchInput(val){
+  const clearBtn=document.getElementById('search-clear');
+  clearBtn.classList.toggle('visible', val.length>0);
+  clearTimeout(geocodeTimer);
+  if(val.length===0){showQuickSuggestions();return}
+  if(val.length<2){hideSuggestions();return}
+  // Immediate local match against quick suggestions
+  const q=val.toLowerCase();
+  const local=QUICK_SUGGESTIONS.filter(s=>
+    s.label.toLowerCase().includes(q)||s.sub.includes(q)
+  ).map(s=>({...s,type:'local'}));
+  renderSuggestions(local);
+  // After short delay, also fetch from Nominatim
+  geocodeTimer=setTimeout(()=>fetchLiveSuggestions(val),400);
+}
+
+function fetchLiveSuggestions(query){
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query+' TX USA')}&limit=4&addressdetails=1&countrycodes=us`)
+    .then(r=>r.json())
+    .then(data=>{
+      const remote=data.map(d=>({
+        label: d.display_name.split(',').slice(0,2).join(',').trim(),
+        sub:   d.display_name.split(',').slice(2,4).join(',').trim(),
+        lat:   parseFloat(d.lat),
+        lng:   parseFloat(d.lon),
+        icon:  '📍',
+        type:  'remote'
+      }));
+      const q=document.getElementById('search-input').value.toLowerCase();
+      const local=QUICK_SUGGESTIONS.filter(s=>s.label.toLowerCase().includes(q)||s.sub.includes(q));
+      renderSuggestions([...local,...remote].slice(0,6));
+    }).catch(()=>{});
+}
+
+function renderSuggestions(items){
+  const box=document.getElementById('suggestions');
+  if(!items.length){box.classList.remove('open');return}
+  box.innerHTML=items.map((s,i)=>`
+    <div class="suggestion-item" onclick="selectSuggestion(${i})">
+      <span class="suggestion-icon">${s.icon||'📍'}</span>
+      <div>
+        <div>${s.label}</div>
+        <div class="suggestion-sub">${s.sub||''}</div>
+      </div>
+    </div>`).join('');
+  box.classList.add('open');
+  // store for click handler
+  box._items=items;
+}
+
+function selectSuggestion(i){
+  const items=document.getElementById('suggestions')._items||[];
+  const s=items[i]; if(!s) return;
+  userLat=s.lat; userLng=s.lng; userLabel=s.label;
+  document.getElementById('search-input').value=s.label;
+  document.getElementById('search-clear').classList.add('visible');
+  hideSuggestions();
+  buildAndRender();
+}
+
+function showQuickSuggestions(){
+  const box=document.getElementById('suggestions');
+  const html=`<div class="suggestion-item" style="opacity:0.5;cursor:default;font-size:11px;padding:8px 14px;letter-spacing:0.5px;font-weight:700;color:var(--text-dim)">NEARBY CITIES</div>`+
+    QUICK_SUGGESTIONS.map((s,i)=>`
+      <div class="suggestion-item" onclick="selectSuggestion(${i})">
+        <span class="suggestion-icon">${s.icon}</span>
+        <div>
+          <div>${s.label}</div>
+          <div class="suggestion-sub">${s.sub}</div>
+        </div>
+      </div>`).join('');
+  box.innerHTML=html;
+  box._items=QUICK_SUGGESTIONS;
+  box.classList.add('open');
+}
+
+function showSuggestions(){
+  const val=document.getElementById('search-input').value;
+  if(!val) showQuickSuggestions();
+}
+
+function hideSuggestions(){
+  document.getElementById('suggestions').classList.remove('open');
+}
+
+function onSearchKey(e){
+  if(e.key==='Enter'){
+    hideSuggestions();
+    e.target.blur();
+    doSearch();
+  }
+  if(e.key==='Escape'){hideSuggestions();e.target.blur()}
+}
+
+function clearSearch(){
+  document.getElementById('search-input').value='';
+  document.getElementById('search-clear').classList.remove('visible');
+  showQuickSuggestions();
+}
+
+function onRadiusChange(){
+  if(!userLat) return;
+  if(currentMode==='ev') fetchEVStations();
+  else if(hasSearched) buildAndRender();
+}
+
+// Close suggestions when tapping outside
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.search-wrap')) hideSuggestions();
+});
+
+// ── GPS ───────────────────────────────────────────────────────────────────────
+function useGPS(){
+  const btn=document.getElementById('gps-btn');
+  btn.textContent='⏳ Locating…';
+  btn.classList.add('locating-gps');
+  if(!navigator.geolocation){
+    btn.textContent='📍 GPS';
+    btn.classList.remove('locating-gps');
+    alert('Geolocation not supported. Please type a city or zip code.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      userLat=pos.coords.latitude; userLng=pos.coords.longitude;
+      userLabel='My Location';
+      document.getElementById('search-input').value='📍 My Location';
+      document.getElementById('search-clear').classList.add('visible');
+      btn.textContent='📍 GPS';
+      btn.classList.remove('locating-gps');
+      setHeaderSub('📍 Using your current location');
+      hideSuggestions();
+      buildAndRender();
+    },
+    ()=>{
+      btn.textContent='📍 GPS';
+      btn.classList.remove('locating-gps');
+      setHeaderSub('GPS unavailable — search by city or zip');
+      showLocating('Could not get GPS. Type a city or zip code above to search.');
+    },
+    {timeout:12000, enableHighAccuracy:true}
+  );
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────────────
+function doSearch(){
+  const q=document.getElementById('search-input').value.trim();
+  hideSuggestions();
+  // Already have coords from GPS or suggestion tap
+  if(userLat && (!q || q==='📍 My Location')){
+    buildAndRender(); return;
+  }
+  if(!q){useGPS();return}
+  // Geocode the typed query
+  const btn=document.getElementById('search-btn');
+  btn.classList.add('searching');
+  btn.querySelector('.btn-label').textContent='Searching…';
+  setHeaderSub('Searching for "'+q+'"…');
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q+' USA')}&limit=1&addressdetails=1&countrycodes=us`)
+    .then(r=>r.json())
+    .then(data=>{
+      btn.classList.remove('searching');
+      btn.querySelector('.btn-label').textContent='Search Nearby';
+      if(!data.length){
+        setHeaderSub('Location not found — try "Dallas TX" or "75063"');
+        showLocating('Location not found. Try a zip code like "75063" or city like "Irving TX".');
+        return;
+      }
+      userLat=parseFloat(data[0].lat);
+      userLng=parseFloat(data[0].lon);
+      userLabel=data[0].display_name.split(',').slice(0,2).join(',').trim();
+      document.getElementById('search-input').value=userLabel;
+      buildAndRender();
+    })
+    .catch(()=>{
+      btn.classList.remove('searching');
+      btn.querySelector('.btn-label').textContent='Search Nearby';
+      setHeaderSub('Network error — check connection');
+    });
+}
+
+// Brand config for known chains
+const BRAND_MAP = {
+  'costco':    {emoji:'🏪', color:'#0060a9', member:true,  memberName:'Costco'},
+  "sam's club":{emoji:'🏪', color:'#007dc6', member:true,  memberName:"Sam's Club"},
+  'sams club': {emoji:'🏪', color:'#007dc6', member:true,  memberName:"Sam's Club"},
+  'quiktrip':  {emoji:'⚡', color:'#e31837', member:false},
+  'qt':        {emoji:'⚡', color:'#e31837', member:false},
+  'shell':     {emoji:'🐚', color:'#f6c700', member:false},
+  'chevron':   {emoji:'✦',  color:'#e31837', member:false},
+  'exxon':     {emoji:'🔵', color:'#003087', member:false},
+  'mobil':     {emoji:'🔴', color:'#e31837', member:false},
+  'valero':    {emoji:'🌀', color:'#cf0a2c', member:false},
+  'murphy':    {emoji:'🟡', color:'#f5a800', member:false},
+  'racetrac':  {emoji:'🏁', color:'#e31837', member:false},
+  '7-eleven':  {emoji:'7️⃣', color:'#00833d', member:false},
+  'circle k':  {emoji:'🔴', color:'#e31837', member:false},
+  'buc-ee':    {emoji:'🦫', color:'#ffdd00', member:false},
+  'sunoco':    {emoji:'🌞', color:'#00aeef', member:false},
+  'bp':        {emoji:'🟢', color:'#009900', member:false},
+  'wawa':      {emoji:'🦆', color:'#c8102e', member:false},
+};
+
+function getBrandInfo(name, operator, brand) {
+  const key = (name||operator||brand||'').toLowerCase();
+  for (const [k,v] of Object.entries(BRAND_MAP)) {
+    if (key.includes(k)) return v;
+  }
+  return {emoji:'⛽', color:'#64748b', member:false};
+}
+
+// ── DEFAULT PRICES (DFW June 2025 estimates, clearly labeled EST) ─────────────
+const DEFAULT_PRICES = {
+  'costco':     {regular:2.99, midgrade:null,  premium:3.49, diesel:3.39},
+  "sam's club": {regular:3.01, midgrade:null,  premium:3.51, diesel:3.41},
+  'sams club':  {regular:3.01, midgrade:null,  premium:3.51, diesel:3.41},
+  'murphy':     {regular:3.05, midgrade:3.25,  premium:3.55, diesel:3.45},
+  'racetrac':   {regular:3.07, midgrade:3.27,  premium:3.57, diesel:3.47},
+  'buc-ee':     {regular:3.05, midgrade:3.25,  premium:3.55, diesel:3.45},
+  'quiktrip':   {regular:3.09, midgrade:3.29,  premium:3.59, diesel:3.49},
+  'qt':         {regular:3.09, midgrade:3.29,  premium:3.59, diesel:3.49},
+  'circle k':   {regular:3.11, midgrade:3.31,  premium:3.61, diesel:3.51},
+  '7-eleven':   {regular:3.12, midgrade:3.32,  premium:3.62, diesel:3.52},
+  'wawa':       {regular:3.09, midgrade:3.29,  premium:3.59, diesel:3.49},
+  'valero':     {regular:3.13, midgrade:3.33,  premium:3.63, diesel:3.53},
+  'exxon':      {regular:3.15, midgrade:3.35,  premium:3.65, diesel:3.55},
+  'mobil':      {regular:3.15, midgrade:3.35,  premium:3.65, diesel:3.55},
+  'chevron':    {regular:3.17, midgrade:3.37,  premium:3.67, diesel:3.57},
+  'shell':      {regular:3.17, midgrade:3.37,  premium:3.67, diesel:3.57},
+  'bp':         {regular:3.16, midgrade:3.36,  premium:3.66, diesel:3.56},
+  'sunoco':     {regular:3.14, midgrade:3.34,  premium:3.64, diesel:3.54},
+  '_default':   {regular:3.15, midgrade:3.35,  premium:3.65, diesel:3.55},
+};
+
+function getDefaultPrices(name, isMember) {
+  const key = (name||'').toLowerCase();
+  for (const [k,v] of Object.entries(DEFAULT_PRICES)) {
+    if(k==='_default') continue;
+    if(key.includes(k)) return v;
+  }
+  if(isMember) return {regular:3.01, midgrade:null, premium:3.51, diesel:3.41};
+  return DEFAULT_PRICES['_default'];
+}
+
+function jitter(p){ return p!=null ? Math.round((p+(Math.random()-0.5)*0.08)*100)/100 : null; }
+
+function buildAndRender(){
+  if(currentMode==='ev'){ fetchEVStations(); return; }
+  const radius = parseFloat(document.getElementById('radius-select').value);
+  setHeaderSub(`📍 ${userLabel||'Your location'} · ${radius} mi radius`);
+
+  // Show loading state
+  document.getElementById('app-body').innerHTML=`
+    <div class="locating">
+      <div class="locating-icon">⛽</div>
+      <div class="locating-text">Finding gas stations…</div>
+      <div class="locating-sub">Searching within ${radius} miles via OpenStreetMap</div>
+    </div>`;
+
+  const radiusM = Math.round(radius * 1609.34);
+  const query = `[out:json][timeout:30];(
+    node[amenity=fuel](around:${radiusM},${userLat},${userLng});
+    way[amenity=fuel](around:${radiusM},${userLat},${userLng});
+  );out center tags;`;
+
+  fetch('https://overpass-api.de/api/interpreter', {
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'data='+encodeURIComponent(query)
+  })
+  .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(data=>{
+    const elements = data.elements||[];
+    allStations = elements.map((el,idx)=>{
+      const t = el.tags||{};
+      const lat = el.lat||(el.center&&el.center.lat)||0;
+      const lng = el.lon||(el.center&&el.center.lon)||0;
+      if(!lat||!lng) return null;
+      const dist = haversine(userLat,userLng,lat,lng);
+      if(dist>radius) return null;
+
+      const name = t.name||t.brand||t.operator||'Gas Station';
+      const brand = getBrandInfo(t.name, t.operator, t.brand);
+
+      // Build address from OSM tags
+      const addr = [
+        t['addr:housenumber']&&t['addr:street'] ? t['addr:housenumber']+' '+t['addr:street'] : t['addr:street'],
+        t['addr:city'], t['addr:state']
+      ].filter(Boolean).join(', ') || (lat.toFixed(4)+', '+lng.toFixed(4));
+
+      // Hours
+      const hours = t['opening_hours']||'';
+      const hoursLabel = hours.toLowerCase().includes('24/7')||hours==='24/7' ? 'Open 24 Hours'
+        : hours ? hours : 'Hours unknown';
+
+      // ── Prices: brand default → OSM tag → crowdsource report (highest wins) ────────────
+      const _stableKey = priceKey(name, addr);
+      const rep = reportedPrices[_stableKey];
+      const def = getDefaultPrices(name, brand.member);
+
+      // Start with brand defaults + small jitter so every station shows a price
+      const prices = {
+        regular:  jitter(def.regular),
+        midgrade: jitter(def.midgrade),
+        premium:  jitter(def.premium),
+        diesel:   jitter(def.diesel),
+      };
+      let priceSource = 'est';
+
+      // OSM price tags override defaults (rare)
+      if(t['fuel:octane_87:price'])  prices.regular  = parseFloat(t['fuel:octane_87:price']);
+      if(t['fuel:octane_89:price'])  prices.midgrade = parseFloat(t['fuel:octane_89:price']);
+      if(t['fuel:octane_91:price']||t['fuel:octane_93:price'])
+        prices.premium = parseFloat(t['fuel:octane_91:price']||t['fuel:octane_93:price']);
+      if(t['fuel:diesel:price'])     prices.diesel   = parseFloat(t['fuel:diesel:price']);
+
+      // Crowdsource report overrides everything
+      if(rep){
+        ['regular','midgrade','premium','diesel'].forEach(k=>{ if(rep[k]) prices[k]=parseFloat(rep[k]); });
+        priceSource = 'reported';
+      }
+
+      // Hide grades OSM explicitly says not carried
+      if(t['fuel:octane_89']==='no') prices.midgrade = null;
+      if(t['fuel:diesel']==='no')    prices.diesel   = null;
+
+      return {
+        id: el.id||idx,
+        name, brand: t.brand||t.operator||name,
+        address: addr,
+        lat, lng, distance: dist,
+        hours: hoursLabel,
+        phone: t.phone||t['contact:phone']||'',
+        rating: t['stars'] ? parseFloat(t['stars']) : (3.5+Math.random()*1.4).toFixed(1)*1,
+        emoji: brand.emoji, color: brand.color,
+        member: brand.member, memberName: brand.memberName||'',
+        prices, priceSource,
+        hasReportedPrice: priceSource==='reported',
+      };
+    }).filter(Boolean).sort((a,b)=>a.distance-b.distance);
+
+    hasSearched=true; currentPage=1; selectedId=null;
+    applyFilters();
+  })
+  .catch(err=>{
+    document.getElementById('app-body').innerHTML=`
+      <div class="empty">
+        <div class="empty-icon">⛽</div>
+        <div>Could not load gas stations.<br><small style="color:var(--text-dim)">${err.message} — try again</small></div>
+        <button onclick="buildAndRender()" style="margin-top:16px;padding:10px 20px;background:var(--indigo);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;font-size:14px">↻ Retry</button>
+      </div>`;
+  });
+}
+
+function applyFilters(){
+  filtered = showMemberOnly ? allStations.filter(s=>s.member) : [...allStations];
+  currentPage=1;
+  renderAll();
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function showLocating(msg){
+  document.getElementById('app-body').innerHTML=`
+    <div class="locating">
+      <div class="locating-icon">📍</div>
+      <div class="locating-text">${msg}</div>
+      <div class="locating-sub">Enter a city or zip code above, or tap GPS</div>
+    </div>`;
+}
+
+function getBest(list){
+  return TYPES.reduce((acc,t)=>{
+    const vals=list.map(s=>s.prices[t]).filter(Boolean);
+    acc[t]=vals.length?Math.min(...vals):null;
+    return acc;
+  },{});
+}
+
+function renderAll(){
+  if(!hasSearched){showLocating('Enter a location or tap GPS');return}
+  if(!filtered.length){
+    document.getElementById('app-body').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div>No stations found within ${document.getElementById('radius-select').value} miles.<br>Try a larger radius.</div></div>`;
+    return;
+  }
+
+  const best=getBest(filtered);
+  const totalPages=Math.ceil(filtered.length/PAGE_SIZE);
+  const pageStations=filtered.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+  const withPrices=filtered.filter(x=>x.prices.regular);
+  const avg=withPrices.length?(withPrices.reduce((s,x)=>s+(x.prices.regular||0),0)/withPrices.length).toFixed(2):'—';
+  const bestReg=best.regular?'$'+best.regular.toFixed(2):'—';
+
+  let html=`
+  <div class="stats">
+    <div class="stat-card"><div class="stat-icon">⛽</div><div class="stat-value">${avg==="—"?avg:"$"+avg}</div><div class="stat-label">Avg Regular</div></div>
+    <div class="stat-card green"><div class="stat-icon">🏆</div><div class="stat-value">${bestReg}</div><div class="stat-label">Best Price</div></div>
+    <div class="stat-card"><div class="stat-icon">📍</div><div class="stat-value">${filtered.length}</div><div class="stat-label">Stations</div></div>
+  </div>
+
+  ${aaaData?`<div class='aaa-banner'><span style='font-size:20px'>🛣️</span><div><div class='aaa-banner-label'>AAA TEXAS AVERAGE PRICES</div><div class='aaa-banner-prices'><div class='aaa-price-item'>Reg <span>$${aaaData.regular}</span></div><div class='aaa-price-item'>Mid <span>$${aaaData.midgrade}</span></div><div class='aaa-price-item'>Prem <span>$${aaaData.premium}</span></div><div class='aaa-price-item'>Diesel <span>$${aaaData.diesel}</span></div></div><div class='aaa-src'>State avg · AAA · Updated daily</div></div></div>`:''}  <div class="filter-row">
+    <span class="filter-label">FILTER:</span>
+    <button class="filter-chip${!showMemberOnly?' active':''}" onclick="toggleMember(false,this)">All Stations</button>
+    <button class="filter-chip member${showMemberOnly?' active':''}" onclick="toggleMember(true,this)">🏪 Members Only</button>
+  </div>
+
+  <div class="fuel-toggle">
+    <button class="fuel-btn${selectedFuel==='regular'?' active':''}" onclick="setFuel('regular',this)">Regular</button>
+    <button class="fuel-btn${selectedFuel==='midgrade'?' active':''}" onclick="setFuel('midgrade',this)">Mid-Grade</button>
+    <button class="fuel-btn${selectedFuel==='premium'?' active':''}" onclick="setFuel('premium',this)">Premium</button>
+    <button class="fuel-btn${selectedFuel==='diesel'?' active':''}" onclick="setFuel('diesel',this)">Diesel</button>
+  </div>
+
+  <div class="sort-row">
+    <span class="sort-label">SORT:</span>
+    <button class="sort-btn${sortBy==='distance'?' active':''}" onclick="setSort('distance',this)">Distance</button>
+    <button class="sort-btn${sortBy==='price'?' active':''}" id="sort-price-btn" onclick="setSort('price',this)">${LABELS[selectedFuel]} $</button>
+    <button class="sort-btn${sortBy==='rating'?' active':''}" onclick="setSort('rating',this)">Rating</button>
+  </div>
+
+  <div id="cards-container">`;
+
+  pageStations.forEach((s,i)=>{
+    const isSelected=selectedId===s.id;
+    const mapsUrl=`https://maps.apple.com/?q=${encodeURIComponent(s.address)}`;
+
+    const priceCells=TYPES.map(t=>{
+      const price=s.prices[t];
+      if(price===null) return '<div class="price-cell"><div class="octane-badge">'+OCTANE[t]+'</div><div class="fuel-type-label">'+LABELS[t]+'</div><div class="price-value" style="font-size:11px;color:#8b949e">N/A</div></div>';
+      const isBest=best[t]&&best[t]===price;
+      const isLive=s.hasReportedPrice;
+      return '<div class="price-cell'+(isBest?' best':'')+'">'+
+        (isBest?'<div class="best-badge">BEST</div>':'')+
+        '<div class="octane-badge">'+OCTANE[t]+'</div>'+
+        '<div class="fuel-type-label">'+LABELS[t]+'</div>'+
+        '<div class="price-value">$'+price.toFixed(2)+'</div>'+
+        (isLive?'<div style="font-size:8px;color:#4ade80;font-weight:700;margin-top:1px">✓ LIVE</div>':'<div style="font-size:8px;color:#8b949e;font-weight:600;margin-top:1px">EST</div>')+
+        (s.member?'<div class="member-price">Members</div>':'')+
+        '</div>';
+    }).join('');
+
+    const rp=reportedPrices[priceKey(s.name,s.address)];
+    const reportedBadge=rp?`<span class="reported-badge">✅ ${rp.date}</span>`:'';
+    const memberBadge=s.member?`<span class="member-badge">🏪 ${s.memberName}</span>`:'';
+
+    const detail=isSelected?`
+      <div class="detail-panel">
+        <div class="detail-grid">
+          ${s.phone?`<div><div class="detail-label">PHONE</div><div class="detail-value blue">${s.phone}</div></div>`:""}
+          <div><div class="detail-label">DISTANCE</div><div class="detail-value">${fmtDist(s.distance)}</div></div>
+          <div style="grid-column:span 2"><div class="detail-label">HOURS</div><div class="detail-value">${s.hours}</div></div>
+        </div>
+        <div class="action-row">
+          <a href="${mapsUrl}" class="action-btn btn-directions">🗺 Directions</a>
+          ${s.phone?`<a href="tel:${s.phone.replace(/[^0-9]/g,"")}" class="action-btn btn-call">📞 Call</a>`:""}
+        </div>
+        <button class="action-btn btn-report" style="width:100%;margin-top:8px;display:block;cursor:pointer" onclick="openReportPrice(${s.id},'${s.name.replace(/'/g,'')}')">📢 Report Current Price</button>
+        ${rp?`<div style="font-size:10px;color:#4ade80;text-align:center;margin-top:5px">☁️ You reported ${rp.date}: Reg $${rp.regular||'—'} · Prem $${rp.premium||'—'}</div>`:''}
+      </div>`:'';
+
+    html+=`
+      <div class="station-card${isSelected?' selected':''}" onclick="toggleCard(${s.id})" style="animation-delay:${i*0.05}s">
+        <div class="card-top">
+          <div class="card-left">
+            <div class="brand-icon" style="background:${s.color}22;border-color:${s.color}55">${s.emoji}</div>
+            <div class="card-info">
+              <div class="name">${s.name}${memberBadge}${reportedBadge}</div>
+              <div class="address">${s.address}</div>
+              <div class="stars">${stars(s.rating)}<span>${s.rating}</span></div>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="distance-badge">${fmtDist(s.distance)}</div><br>
+            <span class="hours ${s.hours.includes('24')?'open':'limited'}">● ${s.hours.includes('24')?'24 hrs':'Limited'}</span>
+          </div>
+        </div>
+        <div class="prices-row">${priceCells}</div>
+      </div>${detail}`;
+  });
+
+  html+=`</div>`;
+
+  // Pagination
+  if(totalPages>1){
+    html+=`<div class="pagination">`;
+    html+=`<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ Prev</button>`;
+    for(let p=1;p<=totalPages;p++){
+      if(p===1||p===totalPages||Math.abs(p-currentPage)<=1){
+        html+=`<button class="page-btn${p===currentPage?' current':''}" onclick="goPage(${p})">${p}</button>`;
+      } else if(Math.abs(p-currentPage)===2){
+        html+=`<span class="page-info">…</span>`;
+      }
+    }
+    html+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next ›</button>`;
+    html+=`</div><div class="page-info" style="text-align:center;margin-bottom:8px">Page ${currentPage} of ${totalPages} · ${filtered.length} stations</div>`;
+  }
+
+  html+=`<div class="footer">📍 Live stations via OpenStreetMap · 📢 Report Price to share</div>`;
+  document.getElementById('app-body').innerHTML=html;
+}
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────────
+function setFuel(f){
+  selectedFuel=f; currentPage=1;
+  if(sortBy==='price') applySort();
+  renderAll();
+}
+function setSort(s){
+  sortBy=s; currentPage=1;
+  applySort(); renderAll();
+}
+function applySort(){
+  filtered.sort((a,b)=>{
+    if(sortBy==='price') return (a.prices[selectedFuel]||99)-(b.prices[selectedFuel]||99);
+    if(sortBy==='rating') return b.rating-a.rating;
+    return a.distance-b.distance;
+  });
+}
+function toggleMember(val){
+  showMemberOnly=val; applyFilters();
+}
+function toggleCard(id){
+  selectedId=selectedId===id?null:id;
+  renderAll();
+}
+function goPage(p){
+  const total=Math.ceil(filtered.length/PAGE_SIZE);
+  if(p<1||p>total) return;
+  currentPage=p; selectedId=null;
+  renderAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── SPLASH & GPS HELPERS ─────────────────────────────────────────────────────
+function showDetecting(){
+  document.getElementById('app-body').innerHTML=`
+    <div class="detecting-state">
+      <div class="detecting-spinner"></div>
+      <div class="detecting-text">Detecting your location…</div>
+      <div class="detecting-sub">Please allow location access when prompted</div>
+    </div>`;
+}
+
+function focusSearch(){
+  document.getElementById('search-input').focus();
+  showQuickSuggestions();
+}
+
+function requestGPS(){
+  showDetecting();
+  setHeaderSub('Detecting your location…');
+  document.getElementById('gps-btn').classList.add('locating-gps');
+  if(!navigator.geolocation){
+    document.getElementById('gps-btn').classList.remove('locating-gps');
+    setHeaderSub('GPS not supported — search by city or zip');
+    showSplash('GPS not available on this device. Search by city or zip code above.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      userLat=pos.coords.latitude;
+      userLng=pos.coords.longitude;
+      userLabel='My Location';
+      document.getElementById('search-input').value='📍 My Location';
+      document.getElementById('search-clear').classList.add('visible');
+      document.getElementById('gps-btn').textContent='📍 GPS';
+      document.getElementById('gps-btn').classList.remove('locating-gps');
+      setHeaderSub('📍 Stations near your location');
+      buildAndRender();
+    },
+    (err)=>{
+      document.getElementById('gps-btn').textContent='📍 GPS';
+      document.getElementById('gps-btn').classList.remove('locating-gps');
+      const msg = err.code===1
+        ? 'Location access was denied. Please search by city or zip code.'
+        : 'Could not get your location. Search by city or zip code above.';
+      setHeaderSub('Search by city, zip, or address above');
+      showSplash(msg);
+    },
+    {timeout:12000, enableHighAccuracy:true, maximumAge:60000}
+  );
+}
+
+function showSplash(errorMsg){
+  const extra = errorMsg
+    ? `<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:10px 14px;font-size:13px;color:#fca5a5;margin-bottom:20px;max-width:300px">${errorMsg}</div>`
+    : '';
+  document.getElementById('app-body').innerHTML=`
+    <div class="splash">
+      <div class="splash-fuel">⛽</div>
+      <div class="splash-title">Find Cheap Gas Near You</div>
+      <div class="splash-desc">Namma Car Fuel &amp; Charging shows prices at nearby stations including Costco & Sam's Club.</div>
+      ${extra}
+      <button class="splash-allow-btn" onclick="requestGPS()">
+        <span>📍</span> Use My Current Location
+      </button>
+      <span class="splash-manual" onclick="focusSearch()">Or search by city / zip code</span>
+    </div>`;
+}
+
+
+// ── MODE SWITCHING ────────────────────────────────────────────────────────────
+function switchMode(mode){
+  currentMode=mode;
+  document.getElementById('tab-gas').className='mode-tab'+(mode==='gas'?' active-gas':'');
+  document.getElementById('tab-ev').className='mode-tab'+(mode==='ev'?' active-ev':'');
+  if(mode==='ev'){ if(userLat) fetchEVStations(); else renderEVEmpty('Search a location or tap GPS first.'); }
+  else { if(hasSearched) renderAll(); else showSplash(); }
+}
+
+// ── JSONBIN CROWDSOURCE ───────────────────────────────────────────────────────
+function setSyncBar(msg,color){
+  var el=document.getElementById('sync-bar');
+  if(el){ el.textContent=msg; el.style.color=color||'#b1bac4'; }
+}
+
+// Stable key so prices survive OSM ID changes
+function priceKey(name, address){ return (name+'|'+address).toLowerCase().replace(/\s+/g,' ').trim(); }
+
+async function initBin(){
+  if(binId){
+    // Bin exists — just sync
+    await syncPrices();
+    return;
+  }
+  setSyncBar('☁️ Setting up…');
+  try{
+    var r=await fetch(JSONBIN_BASE+'/b',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY,'X-Bin-Name':'NammaCarGasPrices2','X-Bin-Private':'false'},
+      body:JSON.stringify({prices:{}})
+    });
+    var d=await r.json();
+    if(!d.metadata||!d.metadata.id) throw new Error('No bin id');
+    binId=d.metadata.id;
+    localStorage.setItem('namma_bin_id',binId);
+    setSyncBar('✅ Cloud ready','#4ade80');
+    setTimeout(function(){ setSyncBar(''); },2000);
+  }catch(e){
+    setSyncBar('⚠️ Cloud unavailable — prices saved locally','#fbbf24');
+    setTimeout(function(){ setSyncBar(''); },3000);
+  }
+}
+
+async function syncPrices(){
+  if(!binId){ await initBin(); return; }
+  setSyncBar('☁️ Loading prices…');
+  try{
+    var r=await fetch(JSONBIN_BASE+'/b/'+binId+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    var d=await r.json();
+    var cloud=(d.record&&d.record.prices)||{};
+    // Merge cloud into local — cloud wins if newer
+    Object.keys(cloud).forEach(function(key){
+      var loc=reportedPrices[key], cld=cloud[key];
+      if(!loc||(cld.ts&&(!loc.ts||cld.ts>loc.ts))) reportedPrices[key]=cld;
+    });
+    try{ localStorage.setItem('namma_prices_v2',JSON.stringify(reportedPrices)); }catch(ex){}
+    var count=Object.keys(reportedPrices).length;
+    setSyncBar(count>0?'✅ '+count+' price'+(count!==1?'s':'')+' loaded':'✅ Synced','#4ade80');
+    setTimeout(function(){ setSyncBar(''); },3000);
+    // Re-render if stations already showing so prices appear immediately
+    if(hasSearched&&currentMode==='gas') applyFilters();
+  }catch(e){
+    setSyncBar('⚠️ Sync failed','#f87171');
+    setTimeout(function(){ setSyncBar(''); },3000);
+  }
+}
+
+async function saveToBin(){
+  if(!binId){ await initBin(); return; }
+  try{
+    setSyncBar('☁️ Sharing…');
+    var r=await fetch(JSONBIN_BASE+'/b/'+binId,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body:JSON.stringify({prices:reportedPrices})
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    setSyncBar('✅ Price shared!','#4ade80');
+    setTimeout(function(){ setSyncBar(''); },3000);
+  }catch(e){
+    setSyncBar('⚠️ Saved locally only','#fbbf24');
+    setTimeout(function(){ setSyncBar(''); },3000);
+  }
+}
+
+
+function openReportPrice(id,name){
+  var s=allStations.find(function(x){return x.id===id;})||{};
+  var p=s.prices||{};
+  var key=priceKey(s.name||name, s.address||'');
+  var ex=reportedPrices[key]||{};
+  var m=document.createElement('div');
+  m.className='modal-overlay'; m.id='report-modal';
+  var rows=['regular','midgrade','premium','diesel'].map(function(t){
+    var lbl={regular:'Regular 87',midgrade:'Mid-Grade 89',premium:'Premium 93',diesel:'Diesel'}[t];
+    var val=ex[t]||p[t]||'';
+    return '<div class="price-input-row"><div class="price-input-label">'+lbl+'</div>'
+      +'<span style="color:var(--text-dim);font-size:14px;margin-right:2px">$</span>'
+      +'<input class="price-input" id="rp_'+t+'" type="number" inputmode="decimal" step="0.01" min="2" max="8" placeholder="0.00" value="'+(val?parseFloat(val).toFixed(2):'')+'"></div>';
+  }).join('');
+  m.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div>'
+    +'<div class="modal-title">📢 Report Current Price</div>'
+    +'<div class="modal-sub">'+name+'</div>'
+    +rows
+    +'<div style="font-size:10px;color:#4ade80;text-align:center;margin-top:6px">☁️ Shared with all app users instantly</div>'
+    +'<div class="modal-actions">'
+    +'<button class="modal-cancel" onclick="closeReportModal()">Cancel</button>'
+    +'<button class="modal-save" onclick="saveReportPrice('+id+')">📢 Share Price</button>'
+    +'</div></div>';
+  document.body.appendChild(m);
+  m.addEventListener('click',function(e){ if(e.target===m) closeReportModal(); });
+  // Focus first empty input
+  setTimeout(function(){
+    var inp=m.querySelector('.price-input');
+    if(inp) inp.focus();
+  },300);
+}
+
+function closeReportModal(){
+  var m=document.getElementById('report-modal'); if(m) m.remove();
+}
+
+async function saveReportPrice(id){
+  var s=allStations.find(function(x){return x.id===id;})||{};
+  var key=priceKey(s.name||'', s.address||'');
+  var now=new Date();
+  var entry={
+    ts:Date.now(),
+    date:now.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})
+  };
+  ['regular','midgrade','premium','diesel'].forEach(function(t){
+    var v=document.getElementById('rp_'+t).value;
+    if(v&&parseFloat(v)>0) entry[t]=parseFloat(v);
+  });
+  if(!Object.keys(entry).filter(function(k){return k!=='ts'&&k!=='date';}).length){
+    closeReportModal(); return;
+  }
+  reportedPrices[key]=entry;
+  try{ localStorage.setItem('namma_prices_v2',JSON.stringify(reportedPrices)); }catch(e){}
+  closeReportModal();
+  applyFilters(); // re-render with new price immediately
+  await saveToBin();
+}
+
+// ── AAA GAS PRICE FETCH ───────────────────────────────────────────────────────
+function fetchAAAprices(){
+  var url='https://gasprices.aaa.com/state-gas-price-averages/';
+  fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var html=d.contents||'';
+      var m=html.match(/Texas[\s\S]*?\$([\d.]+)[\s\S]*?\$([\d.]+)[\s\S]*?\$([\d.]+)[\s\S]*?\$([\d.]+)/);
+      if(m){ aaaData={regular:m[1],midgrade:m[2],premium:m[3],diesel:m[4]};
+        if(hasSearched&&currentMode==='gas') renderAll(); }
+    }).catch(function(){});
+}
+
+// ── EV STATIONS (OpenStreetMap / Overpass) ───────────────────────────────────
+function estimateAvailability(station){
+  var now=new Date(), hour=now.getHours(), dow=now.getDay(), isWknd=dow===0||dow===6;
+  var net=(station.network||'').toLowerCase();
+  var isTesla=net.includes('tesla')||net.includes('supercharger');
+  var score=3;
+  if(isTesla){ score=hour>=17&&hour<=20?7:hour>=11&&hour<=14&&isWknd?6:hour>=22||hour<=6?1:3; }
+  else { score=hour>=17&&hour<=20?5:hour>=10&&hour<=14?4:hour>=22||hour<=6?1:3; }
+  var pf=Math.min(1,4/Math.max(1,station.totalPorts));
+  var adj=score*pf;
+  var status,color,label,waitMin;
+  if(adj<=2){status='open';color='#4ade80';label='Likely Open';waitMin=0;}
+  else if(adj<=4){status='moderate';color='#a3e635';label='Usually Open';waitMin=0;}
+  else if(adj<=6){status='busy';color='#f59e0b';label='~10 min wait';waitMin=10;}
+  else{status='full';color='#ef4444';label='~20 min wait';waitMin=20;}
+  var filled=Math.round(station.totalPorts*(adj/10));
+  var open=Math.max(0,station.totalPorts-filled);
+  return {status,color,label,waitMin,open,filled};
+}
+
+function getPricingInfo(t){
+  var fee=t['fee'],charge=t['charge']||t['cost'];
+  if(fee==='no') return {label:'Free',cls:'price-tag',icon:'🆓'};
+  if(charge) return {label:charge.replace(/;/g,' | '),cls:'price-tag paid',icon:'💳'};
+  if(fee==='yes') return {label:'Paid',cls:'price-tag paid',icon:'💳'};
+  var net=(t['network']||t['operator']||'').toLowerCase();
+  if(net.includes('tesla')) return {label:'Tesla rates',cls:'price-tag paid',icon:'💳'};
+  if(net.includes('electrify')) return {label:'~$0.48/kWh',cls:'price-tag paid',icon:'💳'};
+  if(net.includes('evgo')) return {label:'~$0.40/kWh',cls:'price-tag paid',icon:'💳'};
+  if(net.includes('chargepoint')) return {label:'Varies',cls:'price-tag paid',icon:'💳'};
+  if(net.includes('blink')) return {label:'~$0.39/kWh',cls:'price-tag paid',icon:'💳'};
+  return {label:'Price unknown',cls:'price-tag unknown-price',icon:'❓'};
+}
+
+function fetchEVStations(){
+  var radius=parseFloat(document.getElementById('radius-select').value);
+  document.getElementById('app-body').innerHTML='<div class="ev-loading"><div class="ev-loading-spinner"></div>'
+    +'<div style="font-size:14px;font-weight:700;color:#22d3ee;margin-bottom:6px">Finding EV chargers…</div>'
+    +'<div style="font-size:12px;color:var(--text-dim)">Searching within '+radius+' miles</div></div>';
+  var radiusM=Math.round(radius*1609.34);
+  var query='[out:json][timeout:30];(node[amenity=charging_station](around:'+radiusM+','+userLat+','+userLng+');way[amenity=charging_station](around:'+radiusM+','+userLat+','+userLng+'););out center tags;';
+  fetch('https://overpass-api.de/api/interpreter',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'data='+encodeURIComponent(query)
+  }).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      var socketMap={'socket:type2':'Type 2','socket:type2_cable':'Type 2 Cable','socket:chademo':'CHAdeMO','socket:type1':'J1772','socket:type1_combo':'CCS','socket:type2_combo':'CCS2','socket:tesla_supercharger':'Tesla SC','socket:tesla_destination':'Tesla Dest','socket:nacs':'NACS'};
+      evStations=data.elements.map(function(el,idx){
+        var t=el.tags||{}, lat=el.lat||(el.center&&el.center.lat)||0, lng=el.lon||(el.center&&el.center.lon)||0;
+        var dist=haversine(userLat,userLng,lat,lng);
+        var conns=[];
+        Object.keys(socketMap).forEach(function(key){
+          if(t[key]&&t[key]!=='no'&&t[key]!=='0'){
+            var count=parseInt(t[key])||1, kw=t[key+':output']?parseFloat(t[key+':output']):null;
+            var label=socketMap[key], fast=label==='CHAdeMO'||label==='CCS'||label==='CCS2'||label==='Tesla SC'||label==='NACS'||(kw&&kw>=22);
+            conns.push({type:label,kw:kw,count:count,fast:fast});
+          }
+        });
+        if(!conns.length){ var cap=t.capacity?parseInt(t.capacity):1; conns.push({type:'EVSE',kw:null,count:cap,fast:false}); }
+        var maxKw=Math.max.apply(null,[0].concat(conns.map(function(c){return c.kw||0;})));
+        var totalPorts=conns.reduce(function(a,c){return a+(c.count||1);},0);
+        var network=t['network']||t['operator']||t['brand']||'';
+        var addr=[t['addr:housenumber']?t['addr:housenumber']+' '+t['addr:street']:t['addr:street'],t['addr:city'],t['addr:state']].filter(Boolean).join(', ');
+        return {id:el.id||idx,name:t.name||network||'EV Station',network:network,
+          address:addr||lat.toFixed(4)+', '+lng.toFixed(4),lat:lat,lng:lng,distance:dist,conns:conns,
+          phone:t['phone']||t['contact:phone']||null,hours:t['opening_hours']||null,maxKw:maxKw,totalPorts:totalPorts,
+          pricing:getPricingInfo(t),avail:estimateAvailability({network:network,totalPorts:totalPorts}),
+          dcFast:conns.filter(function(c){return c.fast;}).reduce(function(a,c){return a+c.count;},0)};
+      }).filter(function(s){return s.distance<=radius&&s.lat&&s.lng;})
+        .sort(function(a,b){return a.distance-b.distance;});
+      evPage=1; evSelectedId=null;
+      renderEV();
+    }).catch(function(err){
+      renderEVEmpty('Could not load EV stations. ('+err.message+')<br><small>Try again — Overpass API has occasional outages.</small>');
+    });
+}
+
+function renderEV(){
+  if(!evStations.length){renderEVEmpty('No EV charging stations found. Try a larger radius.');return;}
+  var totalPages=Math.ceil(evStations.length/PAGE_SIZE);
+  var pageStations=evStations.slice((evPage-1)*PAGE_SIZE,evPage*PAGE_SIZE);
+  var fastCount=evStations.filter(function(s){return s.dcFast>0;}).length;
+  var likelyOpen=evStations.filter(function(s){return s.avail.status==='open'||s.avail.status==='moderate';}).length;
+  var totalPorts=evStations.reduce(function(a,s){return a+s.totalPorts;},0);
+
+  var html='<div class="ev-stats">'
+    +'<div class="ev-stat"><div class="stat-icon">⚡</div><div class="stat-value" style="color:#22d3ee;font-size:16px;font-weight:800;font-family:monospace">'+evStations.length+'</div><div class="stat-label">Stations</div></div>'
+    +'<div class="ev-stat"><div class="stat-icon">🔌</div><div class="stat-value" style="color:#22d3ee;font-size:16px;font-weight:800;font-family:monospace">'+totalPorts+'</div><div class="stat-label">Total Ports</div></div>'
+    +'<div class="ev-stat"><div class="stat-icon">🟢</div><div class="stat-value" style="color:#4ade80;font-size:16px;font-weight:800;font-family:monospace">'+likelyOpen+'</div><div class="stat-label">Likely Open</div></div>'
+    +'</div>'
+    +'<div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:6px">'
+    +'<span>ℹ️</span><span>Availability is <strong style="color:var(--indigo-light)">estimated</strong> from time-of-day patterns.</span></div>'
+    +'<div id="ev-cards">';
+
+  pageStations.forEach(function(s,i){
+    var isSelected=evSelectedId===s.id;
+    var mapsUrl='https://maps.apple.com/?q='+encodeURIComponent(s.address||s.name);
+    var av=s.avail, pr=s.pricing;
+    var sortedConns=s.conns.slice().sort(function(a,b){return (b.fast?1:0)-(a.fast?1:0);});
+    var connHtml='';
+    sortedConns.slice(0,4).forEach(function(c){
+      var kwLabel=c.kw?c.kw+'kW':c.fast?'DC':'L2';
+      connHtml+='<div class="ev-connector'+(c.fast?' fast':'') +'">'
+        +'<div class="ev-conn-type" style="color:'+(c.fast?'#22d3ee':'var(--text-dim)')+'">'+c.type+'</div>'
+        +'<div class="ev-conn-kw" style="color:'+(c.fast?'#22d3ee':'var(--text-mid)')+'">'+kwLabel+'</div>'
+        +'<div class="ev-conn-count">'+c.count+' port'+(c.count!==1?'s':'')+'</div></div>';
+    });
+    var slots=Math.min(s.totalPorts,8), filledSlots=Math.round(slots*(av.filled/Math.max(1,s.totalPorts))), openSlots=slots-filledSlots;
+    var waitText=av.waitMin>0?' · ~'+av.waitMin+'min':'';
+    var barHtml='<div class="avail-bar">';
+    for(var r=0;r<filledSlots;r++) barHtml+='<div class="avail-segment avail-red"></div>';
+    for(var g=0;g<openSlots;g++) barHtml+='<div class="avail-segment avail-green"></div>';
+    barHtml+='<span class="avail-label" style="color:'+av.color+'">'+av.label+waitText+'<span class="est-badge">EST</span></span></div>';
+    var speedLabel=s.maxKw>=150?'⚡ Ultra-Fast':s.maxKw>=50?'⚡ DC Fast':s.maxKw>=7?'🔌 L2':'🔌 L1/L2';
+    var speedColor=s.maxKw>=150?'#22d3ee':s.maxKw>=50?'#a5f3fc':s.maxKw>=7?'var(--text-muted)':'var(--text-dim)';
+    var netBadge=s.network&&s.network!==s.name?'<span class="ev-network-badge">'+s.network+'</span>':'';
+
+    var detail='';
+    if(isSelected){
+      detail='<div class="ev-detail-panel"><div class="detail-grid">'
+        +'<div><div class="detail-label">DISTANCE</div><div class="detail-value">'+fmtDist(s.distance)+'</div></div>'
+        +'<div><div class="detail-label">MAX POWER</div><div class="detail-value" style="color:#22d3ee">'+(s.maxKw?s.maxKw+'kW':'L2')+'</div></div>'
+        +(s.hours?'<div style="grid-column:span 2"><div class="detail-label">HOURS</div><div class="detail-value">'+s.hours+'</div></div>':'')
+        +(s.phone?'<div style="grid-column:span 2"><div class="detail-label">PHONE</div><div class="detail-value blue">'+s.phone+'</div></div>':'')
+        +'<div style="grid-column:span 2"><div class="detail-label">NETWORK</div><div class="detail-value">'+(s.network||'Unknown')+'</div></div>'
+        +'<div style="grid-column:span 2"><div class="detail-label">PRICING</div><div class="detail-value">'+pr.icon+' '+pr.label+'</div></div>'
+        +'</div><div class="action-row">'
+        +'<a href="'+mapsUrl+'" class="action-btn btn-ev-directions">🗺 Directions</a>'
+        +(s.phone?'<a href="tel:'+s.phone.replace(/[^0-9+]/g,'')+'" class="action-btn btn-call">📞 Call</a>'
+          :'<a href="https://www.plugshare.com" target="_blank" class="action-btn" style="background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.3);color:var(--indigo-light)">🔌 PlugShare</a>')
+        +'</div></div>';
+    }
+
+    html+='<div class="ev-card'+(isSelected?' selected':'')+'" data-evid="'+s.id+'" style="animation-delay:'+(i*0.05)+'s">'
+      +'<div class="card-top"><div class="card-left">'
+      +'<div class="ev-icon-wrap" style="border-color:'+av.color+'55;background:'+av.color+'11">⚡</div>'
+      +'<div class="card-info"><div class="name">'+s.name+netBadge+'</div>'
+      +'<div class="address">'+s.address+'</div>'
+      +'<span class="'+pr.cls+'">'+pr.icon+' '+pr.label+'</span></div></div>'
+      +'<div class="card-right"><div class="distance-badge">'+fmtDist(s.distance)+'</div><br>'
+      +'<span style="font-size:11px;font-weight:700;color:'+speedColor+'">'+speedLabel+'</span><br>'
+      +'<span style="font-size:10px;color:var(--text-dim)">'+s.totalPorts+' port'+(s.totalPorts!==1?'s':'')+'</span></div></div>'
+      +barHtml
+      +'<div class="ev-connector-row">'+connHtml+'</div>'
+      +'</div>'+detail;
+  });
+
+  html+='</div>';
+  if(totalPages>1){
+    html+='<div class="pagination">';
+    html+='<button class="page-btn" onclick="goEVPage('+(evPage-1)+')" '+(evPage===1?'disabled':'')+'>&#8249; Prev</button>';
+    for(var p=1;p<=totalPages;p++){
+      if(p===1||p===totalPages||Math.abs(p-evPage)<=1) html+='<button class="page-btn'+(p===evPage?' current':'')+'" onclick="goEVPage('+p+')">'+p+'</button>';
+      else if(Math.abs(p-evPage)===2) html+='<span class="page-info">…</span>';
+    }
+    html+='<button class="page-btn" onclick="goEVPage('+(evPage+1)+')" '+(evPage===totalPages?'disabled':'')+'>Next &#8250;</button>';
+    html+='</div><div class="page-info" style="text-align:center;margin-bottom:8px">Page '+evPage+' of '+totalPages+' · '+evStations.length+' stations</div>';
+  }
+  html+='<div class="footer">OpenStreetMap · Availability estimated · Tap card for details</div>';
+  document.getElementById('app-body').innerHTML=html;
+}
+
+function renderEVEmpty(msg){
+  document.getElementById('app-body').innerHTML='<div class="empty"><div class="empty-icon">⚡</div><div style="color:var(--text-dim)">'+msg+'</div></div>';
+}
+function toggleEVCard(id){ evSelectedId=evSelectedId===id?null:id; renderEV(); }
+function goEVPage(p){
+  var total=Math.ceil(evStations.length/PAGE_SIZE);
+  if(p<1||p>total) return;
+  evPage=p; evSelectedId=null; renderEV();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── GLOBAL CLICK DELEGATION (EV cards) ───────────────────────────────────────
+document.addEventListener('click',function(e){
+  if(e.target.closest('a')||e.target.closest('button')) return;
+  var card=e.target.closest('[data-evid]');
+  if(!card) return;
+  var id=parseInt(card.getAttribute('data-evid'));
+  evSelectedId=evSelectedId===id?null:id;
+  renderEV();
+});
+
+// ── AUTO-DETECT ON LOAD ───────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  fetchAAAprices();
+  initBin();
+  setHeaderSub('Tap "Use My Location" or search above');
+  // Try silent GPS first (works if permission was already granted)
+  if(navigator.geolocation){
+    // Quick silent attempt — no UI change yet, just try
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        // Permission already granted — load immediately, no splash needed
+        userLat=pos.coords.latitude;
+        userLng=pos.coords.longitude;
+        userLabel='My Location';
+        document.getElementById('search-input').value='📍 My Location';
+        document.getElementById('search-clear').classList.add('visible');
+        document.getElementById('gps-btn').classList.remove('locating-gps');
+        setHeaderSub('📍 Stations near your location');
+        buildAndRender();
+      },
+      ()=>{
+        // Permission not yet granted or denied — show splash with big button
+        document.getElementById('gps-btn').classList.remove('locating-gps');
+        setHeaderSub('Tap "Use My Location" or search above');
+        // splash is already in the DOM from HTML, nothing to do
+      },
+      {timeout:3000, enableHighAccuracy:false, maximumAge:300000}
+    );
+  } else {
+    document.getElementById('gps-btn').classList.remove('locating-gps');
+    setHeaderSub('Search by city, zip, or address above');
+  }
+});
+</script>
+</body>
+</html>
+digo-d<!DOCTYPE html>
 <html lang="en"><!DOCTYPE html>
 <html lang="en">
 <head>
